@@ -12,9 +12,17 @@
 	<script src="js/jquery.mobile-1.4.5.min.js"></script>  </head>
   <body>
 	<div data-role="page" data-theme="d">
-	  <input type="button" data-inline="true" data-theme="a" value="Add account">
+	  <h3>
+		<input type="button" data-inline="true" data-theme="a" value="New Income">
+		<input type="button" data-inline="true" data-theme="b" value="New Expense">
+		
+		<input type="button" data-inline="true" data-theme="d" value="New transaction">
+		<input type="button" data-inline="true" data-theme="d" value="New account">
+
+	  </h3>
+	  
 	  <div data-role="collapsible" data-theme="c" data-content-theme="d">
-		<h3><span class="lineLeft">Assets</span> <span class="lineRight"> R$ 32102.45 <input type="button" id="addToAssets" data-inline="true" data-theme="a" value="Add to Assets"></span></h3>
+		<h3><span class="lineLeft">Assets</span> <span class="lineRight"> R$ 32102.45 <input type="button" id="addToAssets" data-inline="true" data-theme="a" value="New Income"></span></h3>
 		
 		<div data-role="collapsible" data-content-theme="d">
 		  <h3>Banks <span class="lineRight">R$ 15000.00</span></h3>
@@ -40,7 +48,7 @@
 	  </div>
 
 	  <div data-role="collapsible" data-theme="c" data-content-theme="d">
-		<h3>Expenses <span class="lineRight">R$ 5528.00</span></h3>
+		<h3>Expenses <span class="lineRight">R$ 5528.00 <input type="button" data-inline="true" data-theme="b" value="New Expense"></span></h3>
 
 		<div data-role="collapsible" data-content-theme="d">
 		  <h3>Rent <span class="lineRight">R$ 2200.00</span></h3>
