@@ -22,9 +22,3 @@ clicking on "utilities" will display
 
 copy tests from gilgame
 
-Remove buttons from collapsible headers
-
-add menu (that is always visible) with options:
-New income, New expense, Other transaction, New account
-
-Max width for desktop
