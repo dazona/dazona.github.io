@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>gilplus devel</title>
+	<link type="text/css" rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+	<!-- <link type="text/css" rel="stylesheet" href="css/theme-classic.css"> -->
+	<link type="text/css" rel="stylesheet" href="css/layout.css">
+	<link type="text/css" rel="stylesheet" href="css/gilplus.min.css">
+	<script src="js/jquery-2.1.3.min.js"></script>
+	<script src="js/jquery.mobile-1.4.5.min.js"></script>
+  </head>
+  <body>
+	<div data-role="page" class="ui-responsive-panel" data-theme="d">
+
+	  <!--
+		  <a href="#popupAdd" data-rel="popup" class="ui-btn ui-corner-all ui-btn-inline ui-icon-plus ui-btn-icon-left ui-btn-a" data-transition="pop">Add...</a>
+		  -->
+	  
+	  
+	  <div data-role="header" data-theme="d" data-position="fixed" id="navHeader" style="display: none;" data-tap-toggle="false">
+		<!-- <a href="#popupAdd" data-rel="popup" data-icon="plus" data-theme="a">Add...</a> -->
+		<a href="#navLeft" data-icon="bars">Add...</a>
+		<h3 style="font-size: 1.6em;">GilPlus</h3>
+		<a href="#" data-icon="gear" data-theme="a">My Gil</a>
+	  </div> <!-- end #navHeader -->
+
+	  <div data-role="content">
+		<div id="accountTree" style="display: none;">
+		  
+		  <div data-role="collapsible" data-theme="c" data-content-theme="d">
+			<h3><span class="lineLeft">Assets</span> <span class="lineRight" id="assetsBalance"> R$ 32102.45</span></h3>
+			
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Banks <span class="lineRight">R$ 15000.00</span></h3>
+
+			  <div data-role="collapsible" data-content-theme="d">
+				<h3>Bradesco <span class="lineRight">R$ 6000.00</span></h3>
+
+				<div data-role="collapsible" data-content-theme="d">
+				  <h3>Conta-corrente <span class="lineRight">R$ 2000.00</span></h3>
+				</div>
+
+				<div data-role="collapsible" data-content-theme="d">
+				  <h3>Poupança <span class="lineRight">R$ 4000.00</span></h3>
+				</div>
+			  </div>
+
+			</div>
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Wallets <span class="lineRight">R$ 84.00</span></h3>
+			</div>
+			
+		  </div> <!-- end Assets -->
+
+		  <div data-role="collapsible" data-theme="c" data-content-theme="d">
+			<h3>Expenses <span class="lineRight">R$ 5528.00</span></h3>
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Rent <span class="lineRight">R$ 2200.00</span></h3>
+			  <table class="transactionsTable">
+				<tr>
+				  <td>2/1/15</td>
+				  <td>Rent Feb. 2015</td>
+				  <td>bank</td>
+				  <td>1100.00</td>
+				</tr>
+			  </table>
+			  
+			</div> <!-- end Rent -->
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Utilities <span class="lineRight">R$ 85.89</span></h3>
+
+			  <div data-role="collapsible" data-content-theme="d">
+				<h3>Electricity <span class="lineRight">R$ 30.20</span></h3>
+			  </div>
+			</div>
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Groceries <span class="lineRight">R$ 201.72</span></h3>
+			  <div data-role="content">
+				<span class="lineLeft">6/2/15 Iogurte, cebola, alcatra, banana, caqui, diamante negro, sabonete, lampada, desentupidor, frutas, alface</span><br><span class="lineRight">wallet <b>R$ 29.23</b></span><br>
+				<hr>
+
+				<span class="lineLeft">16/12/14 Banana, tomate, água</span><br><span class="lineRight">itau conta corrente <b>R$ 9.10</b></span><br>
+				<hr>
+
+				<span class="lineLeft">20/10/14 televisão</span><br><span class="lineRight">cartao de credito <b>R$ 1499.90</b></span><br>
+				<hr>
+
+				<span class="lineLeft">12/1/15 Chocolate, Caju</span><br><span class="lineRight">wallet <b>R$ 2.20</b></span><br><hr>
+				<span class="lineLeft">9/10/14 Frutas</span><br><span class="lineRight">itau <b>R$ 10.20</b></span><br><hr>
+				<span class="lineLeft">12/1/15 Chocolate, Caju</span><br><span class="lineRight">wallet <b>R$ 2.20</b></span><br><hr>
+				<span class="lineLeft">9/10/14 Frutas</span><br><span class="lineRight">itau <b>R$ 10.20</b></span><br><hr>
+				<span class="lineLeft">12/1/15 Chocolate, Caju</span><br><span class="lineRight">wallet <b>R$ 2.20</b></span><br><hr>
+				<span class="lineLeft">9/10/14 Frutas</span><br><span class="lineRight">itau <b>R$ 10.20</b></span><br><hr>
+				<span class="lineLeft">12/1/15 Chocolate, Caju</span><br><span class="lineRight">wallet <b>R$ 2.20</b></span><br><hr>
+				<span class="lineLeft">9/10/14 Frutas</span><br><span class="lineRight">itau <b>R$ 10.20</b></span><br><hr>
+				<span class="lineLeft">12/1/15 Chocolate, Caju</span><br><span class="lineRight">wallet <b>R$ 2.20</b></span><br><hr>
+				<span class="lineLeft">9/10/14 Frutas</span><br><span class="lineRight">itau <b>R$ 10.20</b></span><br><hr>
+
+				
+			  </div>
+			</div> <!-- end Groceries -->
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Transportation <span class="lineRight">R$ 265.00</span></h3>
+			</div>
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Communications <span class="lineRight">R$ 81.22</span></h3>
+
+			  <div data-role="collapsible" data-content-theme="d">
+				<h3>Cell phone <span class="lineRight">R$ 30.00</span></h3>
+			  </div>
+
+			  <div data-role="collapsible" data-content-theme="d">
+				<h3>Post office <span class="lineRight">R$ 92.00</span></h3>
+			  </div>
+			  
+			</div> <!-- end Communications -->
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Home <span class="lineRight">R$ 1501.65</span></h3>
+			</div>
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Medical <span class="lineRight">R$ 301.49</span></h3>
+			</div>
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Electronics <span class="lineRight">R$ 122.33</span></h3>
+			</div>
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Restaurants <span class="lineRight">R$ 662.10</span></h3>
+			</div>
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Clothing <span class="lineRight">R$ 0.00</span></h3>
+			</div>
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Entertainment <span class="lineRight">R$ 62.00</span></h3>
+			</div>
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Insurance <span class="lineRight">R$ 300.00</span></h3>
+			</div>
+
+			<div data-role="collapsible" data-content-theme="d">
+			  <h3>Donations <span class="lineRight">R$ 300.00</span></h3>
+			</div>
+
+			
+		  </div> <!-- end Expenses -->
+
+		  <div data-role="collapsible" data-theme="c" data-content-theme="d">
+    		<h3>Income <span class="lineRight">R$ 1420.10</span></h3>
+		  </div> <!-- end Income -->
+
+		</div> <!-- end #accountTree -->
+	  </div> <!-- end content -->
+	  
+	  <div data-role="panel" data-position-fixed="true" data-theme="d" id="navLeft">
+		<ul data-role="listview" data-theme="d" class="nav-search">
+		  <li data-icon="delete"><a href="#" data-rel="close">Close menu</a></li>
+		  <li data-role="list-divider">Transactions</li>
+		  <li><a href="#popupNewIncome" data-position-to="window" data-rel="popup">New Income</a></li>
+		  <li><a href="#">New Expense</a></li>
+		  <li><a href="#">Other Transaction</a></li>
+		  <li data-role="list-divider">Accounts</li>
+		  <li><a href="#">New Account</a></li>
+		  <li data-role="list-divider">Users</li>
+		  <li><a href="#popupLogin" data-position-to="window" data-rel="popup" id="anchorLoginUser">Switch User</a></li>
+		</ul>
+	  </div> <!-- end navLeft panel -->
+
+	  <div data-role="popup" id="popupNewIncome" data-overlay-theme="a">
+		<button type="button" onclick="updateAssetsBalance(); $('#popupNewIncome').popup('close');">Add Income</button>
+	  </div> <!-- end popupNewIncome -->	  
+
+	  <!-- login popup -->
+	  <!-- 
+	  <div data-role="popup" id="popupLogin" data-overlay-theme="a">
+		  <input type="text">
+		  <input type="password">
+	  </div> --> <!-- end #popupLogin -->
+
+	  <div data-role="content" data-theme="a" id="loginForm">
+		<h3>
+		  Username - enter <i>guest</i> for the demo
+		  <input type="text">
+		  Password - leave blank for the demo
+		  <input type="password">
+		  <button type="button" id="signIn">Sign in to GilPlus</button>
+		</h3>
+	  </div>
+	  
+	</div> <!-- end page -->
+	
+
+
+	
+	<script>
+	  var assets = 32000;
+	  function updateAssetsBalance() {
+	  assets += 1000;
+	  $("#assetsBalance").html(assets);
+	  }
+	  $("#signIn").click(function(event) {
+	  $("#loginForm").hide();
+	  $("#navHeader").show();
+	  $("#accountTree").show();
+	  });
+	  
+	  
+	</script>
+	
+  </body>
+</html>

@@ -22,3 +22,8 @@ clicking on "utilities" will display
 
 copy tests from gilgame
 
+multi-line transaction entries (inside account collapsible)
+
+test layout in firefox, ie, chrome, mobile browser, ipad
+
+separate table rows into two spans (with nowrap), left and right aligned (change css)
