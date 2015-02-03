@@ -1,0 +1,9 @@
+/* http://kwbock.github.io/blog/creating-jqm-tab-control/ */
+
+.tab-content {
+    display: none;
+}
+
+.tab-content:first-child {
+    display: block;
+}

@@ -20,10 +20,16 @@
 	  
 	  
 	  <div data-role="header" data-theme="d" data-position="fixed" id="navHeader" style="display: none;" data-tap-toggle="false">
-		<!-- <a href="#popupAdd" data-rel="popup" data-icon="plus" data-theme="a">Add...</a> -->
-		<a href="#navLeft" data-icon="bars">Add...</a>
-		<h3 style="font-size: 1.6em;">GilPlus</h3>
-		<a href="#" data-icon="gear" data-theme="a">My Gil</a>
+		<h3 style="font-size: 1.2em;">GilPlus</h3>
+		<div data-role="navbar">
+		  <ul>
+			<li><a href="#">home</a></li>
+			<li><a href="#">transactions</a></li>
+			<li><a href="#">accounts</a></li>
+		  </ul>
+		</div> <!-- end navbar -->
+		
+
 	  </div> <!-- end #navHeader -->
 
 	  <div data-role="content">
@@ -180,29 +186,33 @@
 	  </div> <!-- end navLeft panel -->
 
 	  <div data-role="popup" id="popupNewIncome" data-overlay-theme="a">
-
-
-
+		<h3>Add Income</h3>
+		<select name="select-custom-1" data-native-menu="false">
+		  <option value="1">Banks</option>
+		  <option value="2">Banks &gt; Bradesco</option>
+		</select>
 		
 		<button type="button" onclick="updateAssetsBalance(); $('#popupNewIncome').popup('close');">Add Income</button>
 	  </div> <!-- end popupNewIncome -->	  
 
 	  <!-- login popup -->
 	  <!-- 
-	  <div data-role="popup" id="popupLogin" data-overlay-theme="a">
-		  <input type="text">
-		  <input type="password">
-	  </div> --> <!-- end #popupLogin -->
+		   <div data-role="popup" id="popupLogin" data-overlay-theme="a">
+			 <input type="text">
+			 <input type="password">
+		   </div> --> <!-- end #popupLogin -->
 
-	  <div data-role="content" data-theme="a" id="loginForm">
-		<h3>
-		  Username
-		  <input type="text">
-		  Password
-		  <input type="password">
-		  <button type="button" id="signIn">Sign in to GilPlus</button>
-		</h3>
-	  </div>
+	  <!--
+		  <div data-role="content" data-theme="a" id="loginForm">
+			<h3>
+			  Username
+			  <input type="text">
+			  Password
+			  <input type="password">
+			  <button type="button" id="signIn">Sign in to GilPlus</button>
+			</h3>
+		  </div>
+		  -->
 	  
 	</div> <!-- end page -->
 	
@@ -216,11 +226,12 @@
 	  $("#assetsBalance").html(assets);
 	  $("#navLeft").panel("close");
 	  }
-	  $("#signIn").click(function(event) {
-	  $("#loginForm").hide();
+
+	  //$("#signIn").click(function(event) {
+	  //$("#loginForm").hide();
 	  $("#navHeader").show();
 	  $("#accountTree").show();
-	  });	  
+	  //});	  
 	</script>
 	
   </body>

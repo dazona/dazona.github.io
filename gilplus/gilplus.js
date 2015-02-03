@@ -70,7 +70,7 @@ var gilplus = (function gilplus(accounts,
   
   // structure used for displaying account relationships
   function buildAccountTree() {
-    var accountTree = { id: "accounts", children: [] };
+    var accountTree = { id: "accounts", name: "Accounts", children: [] };
 
     accounts.forEach(function(account) {
       addIfChild(accountTree, account);
