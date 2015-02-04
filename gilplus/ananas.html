@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>gilplus devel</title>
+	<link type="text/css" rel="stylesheet" href="css/tabControl.css">
+	<link type="text/css" rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+	<link type="text/css" rel="stylesheet" href="css/layout.css">
+	<link type="text/css" rel="stylesheet" href="css/gilplus.min.css">
+	<script src="js/jquery-2.1.3.min.js"></script>
+	<script src="js/tabControl.js"></script>
+	<script src="js/jquery.mobile-1.4.5.min.js"></script>
+	<script src="js/handlebars-v2.0.0.js"></script>
+  </head>
+  <body>
+	
+	<div id="tab1" class="tab-content">
+	  <div>
+		Tab 1 content
+	  </div>
+	  
+	</div>
+	
+	<div id="tab2" class="tab-content">
+	  Tab 2 content
+	</div>
+	
+	<div id="tab3" class="tab-content">
+	  <ul>
+		<li>a b c</li>
+		<li>a b c</li>
+		Add account
+	  </ul>
+	  
+	</div>
+	
+
+	
+	<div data-role="header" data-theme="d" data-position="fixed" data-tap-toggle="false">
+	  <a href="#popupSearch" data-rel="popup" data-position-to="window" data-icon="bars">Search</a>
+	  <h3 style="font-size: 1.6em;">GilPlus</h3>
+	  <a href="#" data-icon="gear" data-theme="a">My Gil</a>
+
+	  <div data-role="navbar">
+		<ul>
+		  <li><a href="#" data-href="tab1" class="ui-btn-active">GilPlus View</a></li>
+		  <li><a href="#" data-href="tab2">Transactions</a></li>
+		  <li><a href="#" data-href="tab3">Accounts</a></li>
+		</ul>
+	  </div> <!-- end navbar -->
+	</div> <!-- end header -->
+
+	<div data-role="popup" id="popupSearch">
+	<h3>Search transactions</h3>
+	</div>
+	
+
+	<script id="handlebarsHeader" type="text/x-handlebars-template">
+	  Name:  {{headerTitle}}
+	</script>
+
+	<script id="accountTreeNodeTemplateUl" type="text/x-handlebars-template">
+	  {{#each children}}
+	  <li>
+		{{name}}
+		{{#if children}}
+		<ul>
+		  {{> accountTreeNodeTemplate}}
+		</ul>
+		{{/if}}
+	  </li>
+	  {{/each}}
+	</script>
+
+	<script id="accountTreeNodeTemplate" type="text/x-handlebars-template">
+	  {{#each children}}
+	  <div data-role="collapsible" data-theme="c" data-content-theme="d" id="{{id}}Collapsible">
+		<h3><span class="lineLeft">{{name}}</span> <span class="lineRight" id="{{id}}Balance">R$</span></h3>
+		{{#if children}}
+		{{> accountTreeNodeTemplate}}
+		{{/if}}
+	  </div>
+	  {{/each}}
+	</script>
+
+	<script id="accountTreeTemplate" type="x-handlebars-template">
+	  <div id="accountTree">
+		{{> accountTreeNodeTemplate}}
+	  </div>
+	</script>
+
+	<script src="util.js"></script>
+	<script src="parsers.js"></script>
+	<script src="formatters.js"></script>
+	<script src="accounts.js"></script>
+	<script src="transactions.js"></script>
+	<script src="test.js"></script>
+	<script src="interactions.js"></script>
+	<script src="gilplus.js"></script>
+
+	
+	<script>
+	  var assets = 32000;
+	  function updateAssetsBalance() {
+	  assets += 1000;
+	  $("#assetsBalance").html(assets);
+	  $("#navLeft").panel("close");
+	  }
+
+	  //$("#signIn").click(function(event) {
+	  //$("#loginForm").hide();
+	  $("#navHeader").show();
+	  $("#accountTree").show();
+	  //});
+
+	  var theData = {headerTitle: "shop page"};
+	  var theTemplateScript = $("#handlebarsHeader").html();
+	  var theTemplate = Handlebars.compile(theTemplateScript);
+	  $("#tab2").html(theTemplate(theData));
+
+	  var items = {children: [ gilplus.accountTree ]};
+
+	  Handlebars.registerPartial("accountTreeNodeTemplate", $("#accountTreeNodeTemplate").html());
+	  var treeTemplate = Handlebars.compile($("#accountTreeTemplate").html());
+	  $("#tab1").html(treeTemplate(items));
+
+
+	  // populate balances
+	  for (var id in gilplus.accountInfo) {
+	  if(gilplus.accountInfo.hasOwnProperty(id)) {
+	  console.log(id + gilplus.accountInfo[id].balanceAll);
+	  $("#" + id + "Balance").html("R$ " + gilplus.accountInfo[id].balanceFiltered);
+	  }
+	  $("#accountsBalance").html('');
+	  }
+
+	  $("#accountsCollapsible").attr("data-collapsed", "false");
+	</script>
+	
+  </body>
+</html>
