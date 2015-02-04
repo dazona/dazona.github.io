@@ -1,6 +1,6 @@
 var myTransactions = [
   {
-    date: "2015-01-27",
+    date: "27/1/15",
     debit: "bank",
     credit: "income",
     description: "January 2015 salary",
@@ -8,7 +8,7 @@ var myTransactions = [
   },
 
   {
-    date: "2015-01-28",
+    date: "28/1/15",
     debit: "wallet",
     credit: "bank",
     description: "transfer",

@@ -20,10 +20,10 @@ var gilplus = (function gilplus(accounts,
     var accountInfo = {};
 
     // initialize tree root
-    accountInfo['accounts'] = { children: [], balanceAll: 0, balanceTimeFrame: 0 };
+    accountInfo['accounts'] = { children: [], balanceAll: 0, balanceFiltered: 0 };
     
     accounts.forEach(function(account) {
-      accountInfo[account.id] = { children: [], balanceAll: 0, balanceTimeFrame: 0, sign: account.sign };
+      accountInfo[account.id] = { parent: account.parent, children: [], balanceAll: 0, balanceFiltered: 0, sign: account.sign };
     });
     return accountInfo;
   }
@@ -94,6 +94,7 @@ var gilplus = (function gilplus(accounts,
       // between the selected dates
 
       var transactionDateMillis = parseDMY(transaction.date);
+
       if ((accountInfo[focusedAccount].children.indexOf(transaction.debit) !== -1 ||
            accountInfo[focusedAccount].children.indexOf(transaction.credit) !== -1) &&
           transaction.description.indexOf(focusedDescription) !== -1 &&
@@ -104,11 +105,32 @@ var gilplus = (function gilplus(accounts,
     });
     return filteredTransactions;      
   }
+
+  function bubble_amount(source, amount, balanceType) {
+    if (source !== 'accounts') {
+      accountInfo[source][balanceType] += amount;
+      bubble_amount(accountInfo[source].parent, amount, balanceType);
+    }
+  }
+  
+  var filteredTransactions = filterTransactions();
+
+  filteredTransactions.forEach(function(transaction) {
+    // update balances
+    var debitAccountInfo = accountInfo[transaction.debit];
+    var creditAccountInfo = accountInfo[transaction.credit];
+    // debitAccountInfo.balanceAll += transaction.amount * debitAccountInfo.sign;
+    // creditAccountInfo.balanceAll -= transaction.amount * creditAccountInfo.sign;
+    var amount = transaction.amount;
+    bubble_amount(transaction.debit, accountInfo[transaction.debit].sign * amount, 'balanceFiltered');
+    bubble_amount(transaction.credit, accountInfo[transaction.credit].sign * amount * (-1), 'balanceFiltered');
+    
+  });
   
   return {
     accountTree: accountTree,
     accountInfo: accountInfo,
-    filteredTransactions: filterTransactions(),
+    filteredTransactions: filteredTransactions,
   };
   
 })(myAccounts, myTransactions, focusedAccount, focusedDescription, startDate, endDate);
