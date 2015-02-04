@@ -1,9 +1,10 @@
-var gilplus = (function gilplus(accounts,
-                                transactions,
-                                focusedAccount,
-                                focusedDescription,
-                                startDate,
-                                endDate) {
+
+function gilplus(accounts,
+                 transactions,
+                 focusedAccount,
+                 focusedDescription,
+                 startDate,
+                 endDate) {
 
   focusedAccount = focusedAccount || "accounts";  // top level account
   focusedDescription = focusedDescription.trim() || "";
@@ -133,4 +134,6 @@ var gilplus = (function gilplus(accounts,
     filteredTransactions: filteredTransactions,
   };
   
-})(myAccounts, myTransactions, focusedAccount, focusedDescription, startDate, endDate);
+}
+
+var myGil = gilplus(myAccounts, myTransactions, focusedAccount, focusedDescription, startDate, endDate);

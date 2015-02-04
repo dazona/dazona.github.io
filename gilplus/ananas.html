@@ -44,7 +44,7 @@
 
 	  <div data-role="navbar">
 		<ul>
-		  <li><a href="#" data-href="tab1" class="ui-btn-active">GilPlus View</a></li>
+		  <li><a href="#" data-href="tab1" class="ui-btn-active">Tree View</a></li>
 		  <li><a href="#" data-href="tab2">Transactions</a></li>
 		  <li><a href="#" data-href="tab3">Accounts</a></li>
 		</ul>
@@ -101,41 +101,37 @@
 
 	
 	<script>
-	  var assets = 32000;
-	  function updateAssetsBalance() {
-	  assets += 1000;
-	  $("#assetsBalance").html(assets);
-	  $("#navLeft").panel("close");
-	  }
-
-	  //$("#signIn").click(function(event) {
-	  //$("#loginForm").hide();
-	  $("#navHeader").show();
-	  $("#accountTree").show();
-	  //});
 
 	  var theData = {headerTitle: "shop page"};
 	  var theTemplateScript = $("#handlebarsHeader").html();
 	  var theTemplate = Handlebars.compile(theTemplateScript);
 	  $("#tab2").html(theTemplate(theData));
 
-	  var items = {children: [ gilplus.accountTree ]};
+	  function renderTree(myGil) {
+	  var items = { children: myGil.accountTree.children };
 
 	  Handlebars.registerPartial("accountTreeNodeTemplate", $("#accountTreeNodeTemplate").html());
 	  var treeTemplate = Handlebars.compile($("#accountTreeTemplate").html());
 	  $("#tab1").html(treeTemplate(items));
-
-
 	  // populate balances
-	  for (var id in gilplus.accountInfo) {
-	  if(gilplus.accountInfo.hasOwnProperty(id)) {
-	  console.log(id + gilplus.accountInfo[id].balanceAll);
-	  $("#" + id + "Balance").html("R$ " + gilplus.accountInfo[id].balanceFiltered);
+	  for (var id in myGil.accountInfo) {
+	  if(myGil.accountInfo.hasOwnProperty(id)) {
+	  console.log(id + myGil.accountInfo[id].balanceAll);
+	  $("#" + id + "Balance").html("R$ " + myGil.accountInfo[id].balanceFiltered);
 	  }
-	  $("#accountsBalance").html('');
+	  
 	  }
 
-	  $("#accountsCollapsible").attr("data-collapsed", "false");
+	  }
+
+	  renderTree(myGil);
+
+
+	  myAccounts.push({ name: "Storage", id: "storage", parent: "assets", sign: 1 });
+
+	  myGil = gilplus(myAccounts, myTransactions, focusedAccount, focusedDescription, startDate, endDate);
+
+	  renderTree(myGil);
 	</script>
 	
   </body>
