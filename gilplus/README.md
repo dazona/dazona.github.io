@@ -20,7 +20,7 @@ clicking on "utilities" will display
 
 # TODOS
 
-copy tests from gilgame
+Where is myAccounts getting the children property?
 
 test layout in firefox, ie, chrome, mobile browser, ipad
 
