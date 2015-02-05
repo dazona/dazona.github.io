@@ -73,9 +73,11 @@ function gilplus(accounts,
   function buildAccountTree() {
     var accountTree = { id: "accounts", name: "Accounts", children: [] };
 
+    
     accounts.forEach(function(account) {
       addIfChild(accountTree, account);
     });
+    
 
     return accountTree;
   }

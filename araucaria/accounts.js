@@ -33,4 +33,11 @@ var myAccounts = [
     parent: "bank",
     sign: 1,
   },
+
+  {
+    name: "secret",
+    id: "secret",
+    parent: "none",
+    sign: 1,
+  },
 ];
