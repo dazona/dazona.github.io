@@ -1,1 +1,1 @@
-var displayData = build(myAccounts, myTransactions, {});
+var unfilteredData = build(myAccounts, myTransactions, {});

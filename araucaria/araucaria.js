@@ -32,7 +32,7 @@ function build(accountList, transactionList, filter) {
   // BEGIN ACTIONS
   // populate tree
   accountList.forEach(function(account) {
-    // call addToTree and save return value, warn if addToTree fails
+    // call addToTree and save its return value, warn if addToTree fails
     if (!addToTree(accountTree, account)) {
       add_warning("Populating account tree, addToTree: " + account.id + " has no matching parent");
     }
@@ -74,20 +74,20 @@ function addToTree(tree, item) {
     tree.children.push({ id: item.id, children: [], });
     return true;
   } else if (tree.children.length > 0) {
-    // search again in each child
+    // search again in each child:
+    // for loop is used because array.forEach() does not allow breaking
+    // out of the loop
     for (var i = 0, len = tree.children.length; i < len; i++) {
-      // remember that array.forEach() does not support breaking out of
-      // loop
       return addToTree(tree.children[i], item)
     }
   }
 }
 
 function findChildren(node) {
-  // given a node in the account tree, build a list of all children
+  // given a node in the account tree, build a list of all its children
 
-  // consider the node itself as a child (for including own
-  // transactions)
+  // consider the node itself as a child (for transactions that belong
+  // directly to that account)
   var childList = [node.id];
   
   function traverse(currentNode) {
