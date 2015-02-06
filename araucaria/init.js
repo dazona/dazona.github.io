@@ -1,1 +1,1 @@
-var allMyData = build(myAccounts, myTransactions, {});
+var displayData = build(myAccounts, myTransactions, {});
