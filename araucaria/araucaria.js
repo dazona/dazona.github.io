@@ -51,7 +51,10 @@ function build(accountList, transactionList, filter) {
   }
 
   findTreeNodeChildren(accountTree);
-  
+
+  // create sorted list of accounts
+  var sortedAccountList = treeToSortedList(accountTree);
+
   // filter transactions
   // TODO
   
@@ -68,7 +71,7 @@ function build(accountList, transactionList, filter) {
 
 function addToTree(tree, item) {
   // try adding item to the right place in the tree
-  
+
   if (item.parent === tree.id) {
     // initialize new object representing the item
     tree.children.push({ id: item.id, children: [], });
@@ -78,7 +81,24 @@ function addToTree(tree, item) {
     // for loop is used because array.forEach() does not allow breaking
     // out of the loop
     for (var i = 0, len = tree.children.length; i < len; i++) {
-      return addToTree(tree.children[i], item)
+      // create a new scope for the array index in each depth level
+      // anonymous function returns result of attempt to add in child
+      var addedToChildren = (function (i) {
+        return addToTree(tree.children[i], item);
+      })(i);
+      if (addedToChildren === true) {
+        return true;
+      }
+    }
+  }
+}
+
+function addToTreeNoClosure(tree, item) {
+  if (item.parent === tree.id) {
+    tree.children.push({ id: item.id, children: [], });
+  } else {
+    for (var i = 0, len = tree.children.length; i < len; i++) {
+      addToTreeNoClosure(tree.children[i], item);
     }
   }
 }
@@ -99,4 +119,92 @@ function findChildren(node) {
   traverse(node);
   
   return childList;
+}
+
+function treeToSortedList(tree) {
+  // build a list of accounts sorted by depth, used when rearranging the
+  // order of accounts
+
+  var sortedList = [];
+
+  function traverse(node) {
+    // first, add tree root's immediate children to the sorted list
+    node.children.forEach(function(child) {
+      sortedList.push(child.id);
+    });
+
+    // then go to each child
+    node.children.forEach(function(child) {
+      traverse(child);
+    });
+  }
+  traverse(tree);
+  return sortedList;
+}
+
+function moveBranch(tree, branch, newParent) {
+  // move the tree's branch as a child of the given parent
+
+  // check that the newParent is not a child of the branch
+  if (isChild(newParent, branch)) {
+    add_warning("Cannot move " + branch.id + " to its own child.");
+    console.log("Cannot move " + branch.id + " to its own child.");
+    return false;
+  }
+
+}
+
+function getBranch(tree, id) {
+  // get subtree matching the id
+  if (tree.id === id) {
+    return tree;
+  } else {
+    var result = null;
+    for (var i = 0, len = tree.children.length; i < len && result === null; i++) {
+      result = getBranch(tree.children[i], id);
+    }
+    return result;
+  }
+  return null;
+}
+
+function accountExists(tree, id) {
+  // check if given id is in the tree
+
+  if (tree.id === id) {
+    return true;
+  } else {
+    for (var i = 0, len = tree.children.length; i < len; i++) {
+      // create a new scope for each child
+      // anonymous function returns the result of search in child 
+      var existsInChild = (function(i) {
+        return accountExists(tree.children[i], id);
+      })(i);
+      if (existsInChild === true) {
+        return true;
+      }
+    }
+  }
+}
+
+function accountExistsIter(tree, id) {
+  if (tree.id === id) {
+    return true;
+  } else {
+    var result = false;
+    // must stop when result is true
+    for (var i = 0; i < tree.children.length && result === false; i++) {
+      result = accountExistsIter(tree.children[i], id);
+    }
+    return result;
+  }
+  return false;
+}
+
+function isChild(child, parent) {
+  return getBranch(parent, child);
+}
+
+function isParent(parent, child) {
+  return getBranch(parent, child);
 }

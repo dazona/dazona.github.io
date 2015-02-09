@@ -82,4 +82,6 @@ test_balance_formatting(-100, "-1.00");
 test_balance_formatting(-1000, "-10.00");
 test_balance_formatting(-12345, "-123.45");
 
-console.log(warnings);
+// console.log(warnings);
+
+

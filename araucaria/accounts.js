@@ -19,6 +19,29 @@ var myAccounts = [
     parent: "assets",
     sign: 1,
   },
+
+
+  {
+    name: "WalB",
+    id: "walb",
+    parent: "wallet",
+    sign: 1,
+  },
+  
+  {
+    name: "WalC",
+    id: "walc",
+    parent: "walb",
+    sign: 1,
+  },
+  
+  {
+    name: "WalD",
+    id: "wald",
+    parent: "walc",
+    sign: 1,
+  },
+  
   
   {
     name: "Income",
@@ -35,9 +58,38 @@ var myAccounts = [
   },
 
   {
-    name: "secret",
-    id: "secret",
-    parent: "none",
+    name: "Expenses",
+    id: "expenses",
+    parent: "accounts",
     sign: 1,
   },
+
+  {
+    name: "Drawer",
+    id: "drw",
+    parent: "assets",
+    sign: 1,
+  },
+  
+  {
+    name: "Groceries",
+    id: "groc",
+    parent: "expenses",
+    sign: 1,
+  },
+
+  {
+    name: "Pao de Acucar",
+    id: "pao",
+    parent: "groc",
+    sign: 1,
+  },
+  
+  {
+    name: "Envelope",
+    id: "env",
+    parent: "assets",
+    sign: 1,
+  },
+  
 ];
