@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>Baobab tree display</title>
+	<script src="js/jquery-2.1.3.min.js"></script>
+	<script src="js/handlebars-v2.0.0.js"></script>
+  </head>
+  <body>
+	<div id="tree">
+
+	</div>
+	
+	<script id="treeNodeTemplateUL" type="text/x-handlebars-template">
+	  {{#each children}}
+	  <li>
+		{{id}}
+		{{#if children}}
+		<ul>
+		  {{> treeNodeTemplateUL}}
+		</ul>
+		{{/if}}
+	  </li>
+	  {{/each}}
+	</script>
+	
+	<script id="treeTemplateUL" type="text/x-handlebars-template">
+	  <ul>
+		{{> treeNodeTemplateUL}}
+	  </ul>
+	</script>
+	<script src="tree.js"></script>
+	
+	<script>
+	  var tree = new Tree("accounts");
+	  tree.addAccount("assets");
+	  tree.addAccount("bank", "assets");
+
+	  var rootNode = { children: tree.root.children };
+
+	  Handlebars.registerPartial("treeNodeTemplateUL", $("#treeNodeTemplateUL").html());
+	  var treeTemplate = Handlebars.compile($("#treeTemplateUL").html());
+	  $("#tree").html(treeTemplate(rootNode));
+	</script>
+
+  </body>
+</html>

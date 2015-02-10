@@ -1,0 +1,10 @@
+{{#each children}}
+<li>
+  {{name}}
+  {{#if children}}
+  <ul>
+	{{> treeNodeTemplateUL}}
+  </ul>
+  {{/if}}
+</li>
+{{/each}}
