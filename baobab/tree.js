@@ -45,4 +45,10 @@ Tree.prototype.addAccount = function(id, parentId) {
 
 Tree.prototype.display = function() {
   console.log(JSON.stringify(this.root, null, 2));
-}
+};
+
+Tree.prototype.moveTo = function(newParent) {
+  if (isChild(newParent, branch)) {
+    warn(newParent.id + " is a child of " + branch.id + ", cannot move there.");
+  }
+};
