@@ -33,19 +33,22 @@ Node.prototype.addNode = function(newId) {
   this.children.push(new Node(newId, this.id));
 };
 
-Node.prototype.flatten = function() {
+Node.prototype.flatten = function(depthDisplay) {
   // return depths and ids of all nodes as an array
+
+  depthDisplay = depthDisplay || function(depth) { return depth; };
+
   var nodeList = [];
 
   function traverse(node, depth) {
-    nodeList.push(depth + " " + node.id);
+    nodeList.push((depthDisplay(depth) + " " + node.id).trim());
     for (var i = 0, len = node.children.length; i < len; i++) {
       traverse(node.children[i], depth + 1);
     }
   }
   traverse(this, 0);
   return nodeList;
-}
+};
 
 
 function AccountTree(rootId) {
@@ -89,7 +92,7 @@ function indexOfChild(arr, id) {
   return -1;
 }
 
-AccountTree.prototype.moveAccountTo = function(accountId, newParentId, addAfterId) {
+AccountTree.prototype.moveAccountToAfter = function(accountId, newParentId, addAfterId) {
   // get references to affected accounts
   var account = this.findAccount(accountId);
   var accountParent = this.findAccount(account.parentId);
@@ -109,4 +112,49 @@ AccountTree.prototype.moveAccountTo = function(accountId, newParentId, addAfterI
     var destIndex = indexOfChild(newParent.children, addAfterId) + 1;
     newParent.children.splice(destIndex, 0, account);
   }
+};
+
+AccountTree.prototype.clear = function() {
+  this.rootAccount.children = [];
+};
+
+AccountTree.prototype.flatten = function() {
+  return this.rootAccount.flatten();
+};
+
+AccountTree.prototype.getAccountList = function() {
+  return this.rootAccount.flatten(function(depth) {
+    var result = "";
+    for (var i = 1; i < depth; i++) {
+      result += ">";
+    }
+    return result;
+  });
+};
+
+AccountTree.prototype.getAccountsExcept = function(accountId) {
+  var nodeList = [];
+
+  function traverse(node) {
+    nodeList.push(node.id);
+    for (var i = 0, len = node.children.length; i < len; i++) {
+      if (node.children[i].id !== accountId) {
+        traverse(node.children[i])
+      }
+    }
+  }
+  traverse(this.rootAccount);
+  return nodeList;
+};
+
+AccountTree.prototype.getImmediateChildren = function(accountId) {
+  accountId = accountId || this.rootAccount.id;
+  
+  var account = this.findAccount(accountId);
+  var childrenList = [];
+  
+  for (var i = 0, len = account.children.length; i < len; i++) {
+    childrenList.push(account.children[i].id);
+  }
+  return childrenList;
 };
