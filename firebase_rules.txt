@@ -1,0 +1,9 @@
+{
+    "rules": {
+        ".read": "auth != null && auth.provider == 'password'",
+        ".write": "auth != null && auth.provider == 'password'"
+    }
+}
+
+// from https://www.firebase.com/docs/web/quickstart.html
+  ".validate": "newData.isString() && newData.val().length < 500"

@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>Hello Firebase</title>
+	<script src="https://cdn.firebase.com/js/client/2.1.2/firebase.js"></script>
+  </head>
+
+  <body>
+  Secret word: <input type="password" id="guestPassword"><br>
+  Message: <input type="text" id="message"><br>
+  <input type="button" value="Write message" id="writeMessage">
+	<script>
+
+document.getElementById("writeMessage").addEventListener('click', function(event) {
+  var firebase = new Firebase("https://dazona.firebaseio.com");
+
+  var authData = firebase.getAuth();
+
+  if (authData) {
+    console.log("Welcome back " + authData.password.email);
+  }
+  
+  var password = document.getElementById("guestPassword").value;
+  console.log(password);
+  
+  firebase.authWithPassword({
+    email: "guest@dazona.com",
+    password: password
+  }, function(err, authData) {
+    if (err) {
+      console.log("Login failed", err);
+    } else {
+      console.log("Authenticated ", authData);
+      firebase.set({ message: document.getElementById("message").value });
+    }
+  });
+});
+
+	</script>
+  </body>
+</html>
