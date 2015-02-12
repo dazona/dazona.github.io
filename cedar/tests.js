@@ -4,7 +4,7 @@ function makeTree() {
   var testTree = new AccountTree("accounts");
 
   testTree.clear();
-  
+
   testTree.addAccount("assets", "accounts");
   testTree.addAccount("bank", "assets");
   testTree.addAccount("bradesco", "bank");
@@ -15,10 +15,16 @@ function makeTree() {
   testTree.addAccount("front", "wal");
   testTree.addAccount("back", "wal");
 
+  testTree.addAccount("itcor", "itau");
+  testTree.addAccount("brcor", "bradesco");
+
   testTree.addAccount("expenses", "accounts");
   testTree.addAccount("groc", "expenses");
   testTree.addAccount("pao", "groc");
   testTree.addAccount("merc", "groc");
+  testTree.addAccount("stm", "groc");
+  testTree.addAccount("extra", "groc");
+  testTree.addAccount("dia", "groc");
   testTree.addAccount("self", "expenses");
   testTree.addAccount("health", "self");
   testTree.addAccount("body", "health");
@@ -26,20 +32,12 @@ function makeTree() {
 
   testTree.addAccount("hsbc", "bank");
 
+
   return testTree;
 }
 
 console.log(makeTree().flatten());
-// ["0 accounts",
-//   "1 assets",
-//    "2 bank",
-//     "3 bradesco", "3 itau", "3 caixa", "3 santander", "3 hsbc",
-//    "2 wal",
-//     "3 front", "3 back",
-//   "1 expenses",
-//    "2 groc",
-//     "3 pao", "3 merc",
-//    "2 self", "3 health", "4 body", "5 hair"]
+// ["0 accounts", "1 assets", "2 bank", "3 bradesco", "4 brcor", "3 itau", "4 itcor", "3 caixa", "3 santander", "3 hsbc", "2 wal", "3 front", "3 back", "1 expenses", "2 groc", "3 pao", "3 merc", "3 stm", "3 extra", "3 dia", "2 self", "3 health", "4 body", "5 hair"]
 
 QUnit.test("Moving nested account to top level", function(assert) {
   var testTree = makeTree();
@@ -64,7 +62,7 @@ QUnit.test("Reordering account at the same level", function(assert) {
   testTree.moveAccountToAfter("santander", "bank", "hsbc");
   flatTree = testTree.flatten();
   assert.ok(flatTree.indexOf("3 bradesco") === flatTree.indexOf("2 bank") + 1);  // ensure bradesco is first of bank
-  assert.ok(flatTree.indexOf("3 santander") - flatTree.indexOf("3 bradesco") === 4);
+  assert.ok(flatTree.indexOf("3 santander") - flatTree.indexOf("3 bradesco") === 6);
 });
 
 QUnit.test("Moving account to shallower level", function(assert) {
