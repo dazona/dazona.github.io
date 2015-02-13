@@ -2,30 +2,49 @@
 
 function AccountTree(rootId) {
   this.rootId = rootId;
-  this.accounts = {};
-  
-  this.clear();
+
+  // http://eloquentjavascript.net/06_object.html
+  // Object.create(null) makes the use of hasOwnProperty unnecessary
+  this.accounts = Object.create(null);
+  this.clearAccounts();
 }
 
-AccountTree.prototype.clear = function() {
+AccountTree.prototype.clearAccounts = function() {
   // remove all accounts
   this.accounts[this.rootId] = { parentId: null, previousSiblingId: "", name: "" };
 }
 
-AccountTree.prototype.findAccount = function(accountId) {
-  return this.accounts[accountId];
+AccountTree.prototype.accountSign = function(accountId) {
+  // hardcode negative root accounts rather than specifying 
+  var negativeAccounts = ["liabilities", "equity", "income"];
+
+  // if accountId matches a root account, return -1
+  if (negativeAccounts.indexOf(accountId) !== -1) {
+    return -1;
+  }
+  
+  for (var i = 0, len = negativeAccounts.length; i < len; i++) {
+    if (this.isAncestorOf(negativeAccounts[i], accountId)) {
+      return -1;
+    }
+  }
+  return 1;
 }
 
-AccountTree.prototype.hasAccount = function(accountId) {
-  return Boolean(this.findAccount(accountId));
+AccountTree.prototype.getAccount = function(accountId) {
+  if (accountId in this.accounts) {
+    return this.accounts[accountId];
+  } else {
+    return null;
+  }
 }
 
 AccountTree.prototype.addAccount = function(accountId, name, parentId, previousSiblingId) {
   previousSiblingId = previousSiblingId || "";
   
-  if (this.hasAccount(accountId)) {
+  if (this.getAccount(accountId)) {
     throw new Error("Cannot add duplicate account id: " + accountId);
-  } else if (previousSiblingId !== "" && !this.hasAccount(previousSiblingId)) {
+  } else if (previousSiblingId !== "" && !this.getAccount(previousSiblingId)) {
     throw new Error("Previous sibling " + previousSiblingId + " not found");
   } else {
 
@@ -42,8 +61,9 @@ AccountTree.prototype.immediateChildren = function(accountId) {
   accountId = accountId || this.rootId;
   var childrenList = [];
 
+  // for-in (for in) loop to find accounts matching parentId 
   for (var id in this.accounts) {
-    if (this.accounts.hasOwnProperty(id) && this.accounts[id].parentId === accountId) {
+    if (this.accounts[id].parentId === accountId) {
       childrenList.push(id);
     }
   }
@@ -72,7 +92,7 @@ AccountTree.prototype.children = function(accountId) {
 AccountTree.prototype.buildTree = function(rootId) {
   rootId = rootId || this.rootId;
   
-  if (!this.findAccount(rootId)) {
+  if (!this.getAccount(rootId)) {
     throw new Error("buildTree cannot find account " + rootId);
   }
   var result = { id: rootId, children: [] };
@@ -88,8 +108,8 @@ AccountTree.prototype.buildTree = function(rootId) {
       var orderedImmediateChildren = [lastChild];
 
       // keep looking back until "" is found
-      while(tree.findAccount(lastChild).previousSiblingId !== "") {
-        lastChild = tree.findAccount(lastChild).previousSiblingId;
+      while(tree.getAccount(lastChild).previousSiblingId !== "") {
+        lastChild = tree.getAccount(lastChild).previousSiblingId;
         orderedImmediateChildren.push(lastChild);
       } 
 
@@ -124,7 +144,7 @@ AccountTree.prototype.flatten = function(tree, depthDisplay) {
 }
 
 AccountTree.prototype.firstChild = function(parentId) {
-  if (!this.hasAccount(parentId)) {
+  if (!this.getAccount(parentId)) {
     throw new Error("Cannot find first child, " + parentId + " not found.");
   }
   var children = this.immediateChildren(parentId);
@@ -165,7 +185,7 @@ AccountTree.prototype.lastChild = function(parentId) {
 
 AccountTree.prototype.nextSibling = function(accountId) {
   // find the account whose previousSiblingId is the given accountId
-  var account = this.findAccount(accountId);
+  var account = this.getAccount(accountId);
   var nextAccount = null;
   
   if (!account) {
@@ -174,7 +194,7 @@ AccountTree.prototype.nextSibling = function(accountId) {
   
   var siblings = this.immediateChildren(account.parentId);
   for (var i = 0, len = siblings.length; i < len; i++) {
-    if (this.findAccount(siblings[i]).previousSiblingId === accountId) {
+    if (this.getAccount(siblings[i]).previousSiblingId === accountId) {
       nextAccount = siblings[i];
     }
   }
@@ -182,12 +202,12 @@ AccountTree.prototype.nextSibling = function(accountId) {
 }
 
 AccountTree.prototype.moveTo = function(accountId, newParentId, newPreviousSiblingId) {
-  var account = this.findAccount(accountId);
-  var newParentAccount = this.findAccount(newParentId);
+  var account = this.getAccount(accountId);
+  var newParentAccount = this.getAccount(newParentId);
   var newPreviousSibling = null;
 
   if (newPreviousSiblingId !== "") {
-    newPreviousSibling = this.findAccount(newPreviousSiblingId);
+    newPreviousSibling = this.getAccount(newPreviousSiblingId);
   }
 
   // stop if one of the given accounts do not exist
@@ -199,7 +219,7 @@ AccountTree.prototype.moveTo = function(accountId, newParentId, newPreviousSibli
   // disallow move to own child
   var accountChildren = this.children(accountId);
   if (accountChildren.indexOf(newParentId) !== -1) {
-    throw new Error("Cannot move " + account.name + " to its own child, " + this.findAccount(newParentId).name);
+    throw new Error("Cannot move " + account.name + " to its own child, " + this.getAccount(newParentId).name);
     return false;
   }
   
@@ -207,7 +227,7 @@ AccountTree.prototype.moveTo = function(accountId, newParentId, newPreviousSibli
   var parentChildren = this.children(newParentId);
 
   if (parentChildren.indexOf(newPreviousSiblingId) === -1 && newPreviousSibling !== null) {
-    throw new Error("Cannot move " + account.name + ", new sibling " + this.findAccount(newPreviousSiblingId).name + " would not be a sibling.");
+    throw new Error("Cannot move " + account.name + ", new sibling " + this.getAccount(newPreviousSiblingId).name + " would not be a sibling.");
     return false;
   }
 
@@ -215,7 +235,7 @@ AccountTree.prototype.moveTo = function(accountId, newParentId, newPreviousSibli
   
   var nextSiblingId = this.nextSibling(accountId);
   if (nextSiblingId) {
-    var nextSibling = this.findAccount(nextSiblingId);
+    var nextSibling = this.getAccount(nextSiblingId);
     // moving account will leave a gap, alter the previousSiblingId of
     // the next account
     nextSibling.previousSiblingId = account.previousSiblingId;
@@ -223,10 +243,10 @@ AccountTree.prototype.moveTo = function(accountId, newParentId, newPreviousSibli
 
   // if there is an account that will follow the moved account in the
   // destination, alter its previousSiblingId
-  var newNextSibling = this.findAccount(this.firstChild(newParentId));
+  var newNextSibling = this.getAccount(this.firstChild(newParentId));
 
   if (newPreviousSiblingId) {
-    newNextSibling = this.findAccount(this.nextSibling(newPreviousSiblingId));
+    newNextSibling = this.getAccount(this.nextSibling(newPreviousSiblingId));
   }
 
   if (newNextSibling) {
@@ -247,3 +267,66 @@ AccountTree.prototype.belongsTo = function(accountId, parentId) {
   // account isChildOf parent or equals itself
   return accountId === parentId || this.isChildOf(accountId, parentId);
 }
+
+// TODO delete account
+// Balances of ancestors must change
+// Safer to allow deletion only when balance is zero
+// Force transfer of balance to new account
+AccountTree.prototype.deleteAccount = function(accountId) {
+  return;
+}
+
+AccountTree.prototype.isAncestorOf = function(parentId, accountId) {
+  var account = this.getAccount(accountId);
+  var parentAccount = this.getAccount(accountId);
+
+  // ignore nonexistent accounts
+  if (!account || !parentAccount) {
+    return false;
+  }
+  
+  while (account.parentId) {
+    if (parentId === account.parentId) {
+      return true;
+    }
+    account = this.getAccount(account.parentId);
+  }
+  return false;
+}
+
+// save balances in cents
+AccountTree.prototype.resetBalances = function() {
+  for (var id in this.accounts) {
+    this.accounts[id].balance = 0;
+  }
+};
+
+AccountTree.prototype.getBalance = function(accountId) {
+  var account = this.getAccount(accountId);
+  
+  if (account) {
+    return account.balance;
+  } else {
+    throw new Error("getBalance cannot find account " + accountId);
+  }
+}
+
+AccountTree.prototype.recordTransaction = function(transaction) {
+  var debitAccountId = transaction.debit;
+  var creditAccountId = transaction.credit;
+
+  var tree = this;
+  
+  function traverse(currentAccountId, amount) {
+    var currentAccount = tree.getAccount(currentAccountId);
+    currentAccount.balance += tree.accountSign(currentAccountId) * amount;
+    if (currentAccount.parentId) {
+      traverse(currentAccount.parentId, amount);
+    }
+  }
+  
+  traverse(debitAccountId, transaction.amount);
+
+  // use negative of the amount
+  traverse(creditAccountId, -transaction.amount);
+};
