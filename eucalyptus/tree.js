@@ -53,7 +53,7 @@ AccountTree.prototype.addAccount = function(accountId, name, parentId, previousS
     if (previousSiblingId === "" && this.immediateChildren(parentId).length > 0) {
       previousSiblingId = this.lastChild(parentId);
     }
-    this.accounts[accountId] = { name: name, parentId: parentId, previousSiblingId: previousSiblingId };
+    this.accounts[accountId] = { name: name, parentId: parentId, previousSiblingId: previousSiblingId, balance: 0 };
   }
 }
 
