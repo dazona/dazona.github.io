@@ -345,8 +345,9 @@ AccountTree.prototype.ulTree = function() {
     nextNode.children.forEach(function(child) { 
       var account = tree.getAccount(child.id);
       var contents = account.name + " " + account.balance;
-      html_tree += "<li>" + contents + "</li>\n";
+      html_tree += "<li>" + contents;
       traverse(child);
+      "</li>\n";
     });
     html_tree += "</ul>";                       
   }
