@@ -1,12 +1,17 @@
 function toMillis(dateString, hourString) {
   // if omitted, use a default time
   hourString = hourString || "17:00";
-  return moment(dateString + " " + hourString, "D/M/YY H:m").valueOf();
+  var timeMoment = moment(dateString + " " + hourString, "D/M/YY H:m");
+  if (!timeMoment.isValid()) {
+    throw new Error("Cannot parse datetime " + dateString + " " + hourString);
+  } else {
+    return timeMoment.valueOf();
+  }
 }
 
 function reverseTransaction(transaction) {
-  var newTransaction = { timestamp: transaction.timestamp,
-                         description: "Reverse " + transaction.description,
+  var newTransaction = { timestamp: moment().valueOf(),
+                         description: "[Reverse " + transaction.description + "]",
                          amount: -transaction.amount,
                          debit: transaction.debit,
                          credit: transaction.credit,

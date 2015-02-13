@@ -330,3 +330,27 @@ AccountTree.prototype.recordTransaction = function(transaction) {
   // use negative of the amount
   traverse(creditAccountId, -transaction.amount);
 };
+
+AccountTree.prototype.ulTree = function() {
+  var bt = this.buildTree();
+  var node = bt;
+
+  console.log(bt.children);
+  
+  var html_tree = "";
+  var tree = this;
+
+  function traverse(nextNode) {
+    html_tree += "<ul>\n";
+    nextNode.children.forEach(function(child) { 
+      var account = tree.getAccount(child.id);
+      var contents = account.name + " " + account.balance;
+      html_tree += "<li>" + contents + "</li>\n";
+      traverse(child);
+    });
+    html_tree += "</ul>";                       
+  }
+
+  traverse(node);
+  return html_tree;
+};

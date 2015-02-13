@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>Add to Firebase tree</title>
+	<script src="https://cdn.firebase.com/js/client/2.1.2/firebase.js"></script>
+  </head>
+
+  <body>
+    Password: <input type="password" id="guestPassword"><br>
+    <input type="button" value="Add to tree" id="action">
+    <script src="tree.js"></script>
+  
+	<script>
+
+document.getElementById("action").addEventListener('click', function(event) {
+  var firebase = new Firebase("https://dazona.firebaseio.com");
+
+  var authData = firebase.getAuth();
+
+  if (authData) {
+    console.log("Welcome back " + authData.password.email);
+  }
+  
+  var password = document.getElementById("guestPassword").value;
+  console.log(password);
+  
+  firebase.authWithPassword({
+    email: "guest@dazona.com",
+    password: password
+  }, function(err, authData) {
+    if (err) {
+      console.log("Login failed", err);
+    } else {
+      console.log("Authenticated ", authData);
+      var firebaseAccountList = firebase.child("eucalyptus/accountList");
+      var accountList = null;
+      firebaseAccountList.once("value", function(snapshot) {
+        accountList = snapshot.val();
+        console.log(JSON.stringify(accountList));
+
+        var clientTree = new AccountTree("accounts");
+        clientTree.accounts = accountList;
+
+        console.log(clientTree.flatten());
+
+        try {
+          clientTree.addAccount("rest", "Restaurants", "expenses");
+          firebaseAccountList.set(clientTree.accounts);
+        } catch (e) {
+          console.log("cannot add juros: " + e);
+        }
+
+        try {
+          clientTree.addAccount("mtnwest", "Mountain West", "bank");
+          firebaseAccountList.set(clientTree.accounts);
+        } catch (e) {
+          console.log("cannot add mtnwest: " + e);
+        }
+
+      }, function(err) {
+        console.log("Read account list failed: " + err.code);
+      });
+    }
+  });
+});
+
+	</script>
+  </body>
+</html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>Read tree from Firebase</title>
+	<script src="https://cdn.firebase.com/js/client/2.1.2/firebase.js"></script>
+  </head>
+
+  <body>
+    Password: <input type="password" id="guestPassword"><br>
+    <input type="button" value="Read tree" id="readTree">
+
+	<div id="ulTree"></div>
+	
+    <script src="tree.js"></script>
+  
+	<script>
+
+document.getElementById("readTree").addEventListener('click', function(event) {
+  var firebase = new Firebase("https://dazona.firebaseio.com");
+
+  var authData = firebase.getAuth();
+
+  if (authData) {
+    console.log("Welcome back " + authData.password.email);
+  }
+  
+  var password = document.getElementById("guestPassword").value;
+  console.log(password);
+  
+  firebase.authWithPassword({
+    email: "guest@dazona.com",
+    password: password
+  }, function(err, authData) {
+    if (err) {
+      console.log("Login failed", err);
+    } else {
+      console.log("Authenticated ", authData);
+      var firebaseAccountList = firebase.child("eucalyptus/accountList");
+      var accountList = null;
+      firebaseAccountList.on("value", function(snapshot) {
+        accountList = snapshot.val();
+        console.log(JSON.stringify(accountList));
+
+        var clientTree = new AccountTree("accounts");
+        clientTree.accounts = accountList;
+
+        console.log(clientTree.flatten());
+
+        document.getElementById("ulTree").innerHTML = clientTree.ulTree(clientTree.buildTree());
+      }, function(err) {
+        console.log("Read account list failed: " + err.code);
+      });
+    }
+  });
+});
+
+	</script>
+  </body>
+</html>

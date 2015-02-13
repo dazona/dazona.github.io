@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>Save tree to Firebase</title>
+	<script src="https://cdn.firebase.com/js/client/2.1.2/firebase.js"></script>
+  </head>
+
+  <body>
+    Password: <input type="password" id="guestPassword"><br>
+    <input type="button" value="Save tree" id="saveTree">
+    <script src="tree.js"></script>
+  
+	<script>
+
+var t = new AccountTree("accounts");
+  
+  t.addAccount("assets", "Assets", "accounts");
+  t.addAccount("bank", "Banks", "assets");
+  t.addAccount("bradesco", "Bradesco", "bank");
+  t.addAccount("itau", "Itaú", "bank");
+  t.addAccount("caixa", "Caixa Economica Federal", "bank");
+  t.addAccount("santander", "Santander", "bank");
+  t.addAccount("wal", "Wallets", "assets");
+  t.addAccount("front", "Front", "wal");
+  t.addAccount("back", "Back", "wal");
+
+  t.addAccount("itcor", "Conta Corrente", "itau");
+  t.addAccount("brcor", "Conta Corrente", "bradesco");
+
+  t.addAccount("expenses", "Expenses", "accounts");
+  t.addAccount("groc", "Groceries", "expenses");
+  t.addAccount("pao", "Pao de Acucar", "groc");
+  t.addAccount("merc", "Mercadinho", "groc");
+  t.addAccount("stm", "St. Marche", "groc");
+  t.addAccount("extra", "Extra", "groc");
+  t.addAccount("dia", "Dia", "groc");
+  t.addAccount("self", "Self-care", "expenses");
+  t.addAccount("health", "Health", "self");
+  t.addAccount("body", "Body", "health");
+  t.addAccount("hair", "Hair", "body");
+
+  t.addAccount("hsbc", "HSBC", "bank");
+
+  t.addAccount("income", "Income", "accounts");
+
+t.resetBalances();
+
+
+document.getElementById("saveTree").addEventListener('click', function(event) {
+  var firebase = new Firebase("https://dazona.firebaseio.com");
+
+  var authData = firebase.getAuth();
+
+  if (authData) {
+    console.log("Welcome back " + authData.password.email);
+  }
+  
+  var password = document.getElementById("guestPassword").value;
+  console.log(password);
+  
+  firebase.authWithPassword({
+    email: "guest@dazona.com",
+    password: password
+  }, function(err, authData) {
+    if (err) {
+      console.log("Login failed", err);
+    } else {
+      console.log("Authenticated ", authData);
+      firebase.child("eucalyptus/accountList").set(t.accounts);
+    }
+  });
+});
+
+	</script>
+  </body>
+</html>

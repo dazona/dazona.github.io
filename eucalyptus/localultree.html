@@ -1,11 +1,18 @@
-"use strict";
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>Eucalyptus tests</title>
+	<link rel="stylesheet" href="../css/qunit-1.17.1.css">
+  </head>
+  <body>
+	<div id="ulTree"></div>
 
-function makeTree() {
+	<script src="../lib/moment-with-locales.min.js"></script>
+	<script src="tree.js"></script>
+	<script src="transaction.js"></script>
+	<script>
   var t = new AccountTree("accounts");
-
-  t.clearAccounts();
-  t.resetBalances();
-  
   t.addAccount("assets", "Assets", "accounts");
   t.addAccount("bank", "Banks", "assets");
   t.addAccount("bradesco", "Bradesco", "bank");
@@ -43,46 +50,11 @@ function makeTree() {
   t.addAccount("liabilities", "Liabilities", "accounts");
   t.addAccount("credit", "Credit Card", "liabilities");
 
-  return t;
-}
+var bt = t.buildTree();
+var ulTree = t.ulTree(bt);
+console.log(ulTree);
+document.getElementById("ulTree").innerHTML = ulTree;
+	</script>
+  </body>
+</html>
 
-// ["0 accounts",
-//  "1 assets",
-//   "2 bank",
-//    "3 bradesco",
-//     "4 brcor",
-//    "3 itau", "4 itcor",
-//    "3 caixa", "3 santander", "3 hsbc",
-//   "2 wal",
-//    "3 front", "3 back",
-//  "1 expenses",
-//   "2 groc",
-//    "3 pao", "3 merc", "3 stm", "3 extra", "3 dia",
-//   "2 self",
-//    "3 health",
-//     "4 body",
-//      "5 hair"]
-
-QUnit.test("Add transaction", function(assert) {
-  var t = makeTree();
-  
-  t.recordTransaction({ timestamp: 0, description: "pass go", amount: 20000, debit: "bank", credit: "open" });
-  console.log(t.getAccount("assets"));
-  assert.equal(t.getAccount("assets").balance, 20000);
-  
-});
-
-QUnit.test("Reverse transaction", function(assert) {
-  var t = makeTree();
-
-  var originalTx = { timestamp: 0, description: "pass go", amount: 20000, debit: "bank", credit: "open" };
-
-  t.recordTransaction(originalTx);
-  assert.ok(!originalTx.reversed);
-  
-  var reverseTx = reverseTransaction(originalTx);
-  t.recordTransaction(reverseTx);
-
-  assert.equal(t.accounts['bank'].balance, 0);
-  assert.equal(originalTx.reversed, true);
-});

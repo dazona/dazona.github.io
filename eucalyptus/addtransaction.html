@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>Add transaction to Firebase</title>
+	<script src="https://cdn.firebase.com/js/client/2.1.2/firebase.js"></script>
+  </head>
+  
+
+  <body>
+    Password: <input type="password" id="guestPassword"><br>
+	desc: <input type="text" id="txDesc" value="pizza"><br>
+	amount: <input type="text" id="txAmount" value="12000"><br>
+	debit: <input type="text" id="txDebit" value="rest"><br>
+	credit: <input type="text" id="txCredit" value="itau"><br>
+	
+    <input type="button" value="Add transaction" id="action">
+
+	<script src="../lib/moment-with-locales.min.js"></script>
+    <script src="tree.js"></script>
+  
+	<script>
+
+document.getElementById("action").addEventListener('click', function(event) {
+  var firebase = new Firebase("https://dazona.firebaseio.com");
+
+  var authData = firebase.getAuth();
+
+  if (authData) {
+    console.log("Welcome back " + authData.password.email);
+  }
+  
+  var password = document.getElementById("guestPassword").value;
+  console.log(password);
+  
+  firebase.authWithPassword({
+    email: "guest@dazona.com",
+    password: password
+  }, function(err, authData) {
+    if (err) {
+      console.log("Login failed", err);
+    } else {
+      console.log("Authenticated ", authData);
+      var firebaseAccountList = firebase.child("eucalyptus/accountList");
+      var accountList = null;
+      firebaseAccountList.once("value", function(snapshot) {
+        accountList = snapshot.val();
+        console.log(JSON.stringify(accountList));
+        
+        var clientTree = new AccountTree("accounts");
+        clientTree.accounts = accountList;
+        
+        var txMillis = moment().valueOf();
+        var txDesc = document.getElementById("txDesc").value;
+        var txAmount = parseInt(document.getElementById("txAmount").value, 10);
+        var txDebit = document.getElementById("txDebit").value;
+        var txCredit = document.getElementById("txCredit").value;
+
+        var transaction = {
+          timestamp: txMillis,
+          description: txDesc,
+          amount: txAmount,
+          debit: txDebit,
+          credit: txCredit,
+        };
+
+        firebaseTransactionList = firebase.child("eucalyptus/transactionList");
+        firebaseTransactionList.push(transaction);
+
+        clientTree.recordTransaction(transaction);
+        console.log("added transaction " + transaction.description);
+
+        firebaseAccountList.set(clientTree.accounts);
+      });
+    }                              
+  });
+});
+
+	</script>
+  </body>
+</html>

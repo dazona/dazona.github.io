@@ -279,9 +279,18 @@ QUnit.test("Add transaction", function(assert) {
 QUnit.test("Reverse transaction", function(assert) {
   var tr = { timestamp: 1000, description: "pizza", amount: 3200, debit: "expenses", credit: "itau" };
   var reversedTr = reverseTransaction(tr);
-  assert.equal(reversedTr.description, "Reverse " + tr.description);
+  assert.equal(reversedTr.description, "[Reverse " + tr.description + "]");
 
   // modifying reversed does not affect original
   reversedTr.credit = "bank";
   assert.equal(tr.credit, "itau");
+});
+
+// TODO programmatically test UL tree
+QUnit.test("Create UL tree", function(assert) {
+  var t = makeTree();
+  var bt = t.buildTree();
+  var html_tree = t.ulTree(bt);
+  console.log(html_tree);
+  assert.ok(true);
 });
