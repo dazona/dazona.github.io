@@ -40,6 +40,8 @@ AccountTree.prototype.getAccount = function(accountId) {
 }
 
 AccountTree.prototype.addAccount = function(accountId, name, parentId, previousSiblingId) {
+  name = name || "Unnamed";
+  parentId = parentId || this.rootId;
   previousSiblingId = previousSiblingId || "";
   
   if (this.getAccount(accountId)) {

@@ -1,0 +1,15 @@
+.lineRight {
+    float: right;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+.lineLeft {
+    float: left;
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+.transactionsTable {
+    width: 100%;
+}

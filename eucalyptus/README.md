@@ -23,3 +23,5 @@ var toast=function(msg){
 	  $(this).remove();
 	});
 }
+
+Save final version of index as complete HTML (Ctrl-S) and run through W3C validator
