@@ -1,0 +1,178 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Eucalyptus tabs</title>
+	<link type="text/css" rel="stylesheet" href="css/jquery.mobile.tabControl.css">
+	<link type="text/css" rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css">
+	<link type="text/css" rel="stylesheet" href="css/tabsLayout.css">
+	<link type="text/css" rel="stylesheet" href="css/jquery.mobile.gilplus.min.css">
+
+	<script src="lib/jquery-2.1.3.min.js"></script>
+	<script src="lib/jquery.mobile.tabControl.js"></script>
+	<script src="lib/jquery.mobile-1.4.5.min.js"></script>
+  <script src="lib/handlebars-v2.0.0.js"></script>
+  <script src="https://cdn.firebase.com/js/client/2.1.2/firebase.js"></script>
+  </head>
+  <body>
+	<div id="accountTreeTab" class="tab-content">
+	  <h3>Loading...</h3>
+	</div> <!-- end accountTreeTab -->
+	
+	<div id="transactionsTab" class="tab-content">
+	  Transactions
+	</div> <!-- end transactionsTab -->
+	
+	<div id="accountsTab" class="tab-content">
+	  Accounts
+
+	</div> <!-- end accountsTab -->
+
+	<div data-role="header" data-theme="d" data-position="fixed" data-tap-toggle="false">
+	  <a href="#popupSearch" data-rel="popup" data-position-to="window" data-icon="bars">Search</a>
+	  <h3 style="font-size: 1.6em;">GilPlus</h3>
+	  <a href="#popupLogin" data-position-to="window" data-rel="popup" data-icon="gear" data-theme="a" id="loginIcon">My Gil</a>
+
+	  <div data-role="navbar">
+		<ul>
+		  <li><a href="#" data-href="accountTreeTab" class="ui-btn-active">Nested View</a></li>
+		  <li><a href="#" data-href="transactionsTab">Transactions</a></li>
+		  <li><a href="#" data-href="accountsTab">Accounts</a></li>
+		</ul>
+	  </div> <!-- end navbar -->
+	</div> <!-- end header -->
+
+	<div data-role="popup" id="popupSearch">
+  <h3>Search transactions</h3>
+	</div>
+
+	<div data-role="popup" id="popupLogin">
+		 <h3 id="loginMessage">Log in</h3>
+		 email <input type="text" id="loginEmail">
+		 password <input type="password" id="loginPassword">
+		 <input type="button" id="loginSubmit" value="Log in">
+	</div>
+	  
+	<script id="accountTreeNodeTemplate" type="text/x-handlebars-template">
+	  {{#each children}}
+	  <div data-role="collapsible" data-theme="c" data-content-theme="d" id="{{id}}Collapsible">
+  <h3><span class="lineLeft" id="{{id}}Name"></span> <span class="lineRight" id="{{id}}Balance">R$</span></h3>
+		{{#if children}}
+		{{> accountTreeNodeTemplate}}
+		{{/if}}
+	  </div>
+	  {{/each}}
+	</script>
+
+	<script id="accountTreeTemplate" type="x-handlebars-template">
+	  <div id="accountTree">
+		{{> accountTreeNodeTemplate}}
+	  </div>
+	</script>
+
+	<script src="js/parsers.js"></script>
+	<script src="js/formatters.js"></script>
+	
+	<script src="tree.js"></script>
+	<script src="transaction.js"></script>
+
+		<script>
+		
+
+		function loadData(authData) {
+		  if (authData) {
+			console.log("Welcome back " + authData.password.email);
+			var firebaseAccountList = firebase.child("eucalyptus/accountList");
+			var accountList = null;
+			firebaseAccountList.on("value", function(snapshot) {
+			  accountList = snapshot.val();
+			  
+			  var clientTree = new AccountTree("accounts");
+			  clientTree.accounts = accountList;
+			  
+			  renderTree(clientTree);
+			}, function(err) {
+			  console.log("Read account list failed: " + err.code);
+			});
+		  }
+		}
+		
+		function renderTree(accountTree) {
+		  var nestedTree = accountTree.buildTree();
+		  var items = { children: nestedTree.children, };
+
+		  Handlebars.registerPartial("accountTreeNodeTemplate", $("#accountTreeNodeTemplate").html());
+		  var treeTemplate = Handlebars.compile($("#accountTreeTemplate").html());
+		  $("#accountTreeTab").html(treeTemplate(items));
+
+		  // populate balances
+		  var accountList = accountTree.accounts;
+		  for (var id in accountList) {
+			// console.log(id + myGil.accountInfo[id].balanceAll);
+			$("#" + id + "Name").html(accountList[id].name);
+			$("#" + id + "Balance").html("R$ " + accountList[id].balance);
+			$("#" + id + "Collapsible").collapsible();
+		  }
+		}
+
+		document.getElementById("loginSubmit").addEventListener('click', function() {
+		  var email = document.getElementById("loginEmail").value;
+		  var password = document.getElementById("loginPassword").value;
+		  console.log(email + " password hidden");
+		  
+		  firebase.authWithPassword({
+			email: email,
+			password: password
+		  }, function(err, authData) {
+			if (err) {
+			  console.log("Login failed", err);
+			  $("#loginMessage").html("Could not login email/password");
+			  $("#loginEmail").
+			  $("#loginPassword").val("");
+			} else {
+			  console.log("Authenticated ", authData);
+			  $("#popupLogin").popup("close");
+			  loadData(authData);
+			}
+		  });
+		});
+
+		var firebase;
+
+
+		  firebase = new Firebase("https://dazona.firebaseio.com");
+		  
+		  var authData = firebase.getAuth();
+		  
+		  if (authData) {
+			console.log("logged in " + authData.password.email);
+
+			loadData(authData);
+			
+		  } else {
+			// open log in popup
+			console.log("not logged in");
+		  firebase.authWithPassword({
+			email: "guest@dazona.com",
+			password: "demo"
+		  }, function(err, authData) {
+			if (err) {
+			  console.log("Login failed", err);
+			  $("#loginMessage").html("Could not login email/password");
+			  $("#loginEmail").
+			  $("#loginPassword").val("");
+			} else {
+			  console.log("Authenticated ", authData);
+			  $("#popupLogin").popup("close");
+			  loadData(authData);
+			}
+		  });
+
+		  }
+	   
+
+
+		</script>
+  </body>
+</html>
