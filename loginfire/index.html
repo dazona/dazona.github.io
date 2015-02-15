@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>Login to Firebase</title>
+	<script src="https://cdn.firebase.com/js/client/2.1.2/firebase.js"></script>
+  </head>
+  <body>
+  <div id="loginNotice">
+<!--  Please log in -->
+  </div>
+	<div id="secret" style="display: none;">
+  Secret area
+<input id="logoutButton" type="button" value="Logout">
+	</div>
+	<script>
+  var firebase = new Firebase("https://dazona.firebaseio.com");
+var authData = firebase.getAuth();
+if (authData) {
+  document.getElementById('secret').style.display = 'inline';
+  document.getElementById('loginNotice').style.display = 'none';
+  document.getElementById('logoutButton').addEventListener('click', function() {
+    firebase.unauth();
+    document.location.href = "login.html";
+  });
+} else {
+  console.log("redirect to login.html");
+  document.location.href = "login.html";
+}
+	</script>
+  </body>
+</html>

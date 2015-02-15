@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+  <head>
+	<meta charset="utf-8">
+	<title>Login form to Firebase</title>
+	<script src="https://cdn.firebase.com/js/client/2.1.2/firebase.js"></script>
+  </head>
+  <body>
+	  Email: <input id="userEmail"><br>
+	  Password: <input type="password" id="userPassword"><br>
+	  <input type="button" id="loginButton" value="Log in">
+
+	  <script>
+  var firebase = new Firebase("https://dazona.firebaseio.com");
+var authData = firebase.getAuth();
+
+if (authData) {
+  // user is logged in, redirect to index
+  document.location.href = "index.html";
+}
+
+document.getElementById("loginButton").addEventListener("click", function() {
+  var userEmail = document.getElementById("userEmail").value;
+  var password = document.getElementById("userPassword").value;
+  console.log(password);
+  
+  firebase.authWithPassword({
+	email: userEmail,
+	password: password
+  }, function(err, authData) {
+	if (err) {
+	  console.log("Login failed", err);
+	} else {
+	  console.log("Authenticated ", authData);
+      document.location.href = "index.html";
+    }
+  });
+});
+          
+	  </script>
+  </body>
+</html>
